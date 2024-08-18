@@ -10,4 +10,7 @@ export class Task {
     completeTask() {
         this.isCompleted = true;
     }
+    getId() {
+        return this.id;
+    }
 }
