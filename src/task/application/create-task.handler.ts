@@ -1,8 +1,8 @@
-import { TaskRepository } from "src/domain/task.repository";
+import { TaskRepository } from "src/task/domain/task.repository";
 import { CreateTaskCommand } from "./create-task.command";
-import { Task } from "src/domain/task.entity";
+import { Task } from "src/task/domain/task.entity";
 import { EntityId } from "src/libs/entity-id.vo";
-import { Title } from "src/domain/title.vo";
+import { Title } from "src/task/domain/title.vo";
 
 export class CreateTaskHandler {
     constructor(private readonly taskRepository: TaskRepository) { }
