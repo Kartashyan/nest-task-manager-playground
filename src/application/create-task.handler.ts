@@ -7,7 +7,13 @@ import { Title } from "src/domain/title.vo";
 export class CreateTaskHandler {
     constructor(private readonly taskRepository: TaskRepository) { }
     async execute(command: CreateTaskCommand): Promise<void> {
-        const task = new Task(new EntityId(), new Title(command.name), command.description, false);
+        const taskProps = {
+            id: new EntityId(),
+            title: new Title(command.name),
+            description: command.description,
+            isCompleted: false,
+        };
+        const task = new Task(taskProps);
         await this.taskRepository.save(task);
     }
 }
