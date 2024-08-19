@@ -1,7 +1,14 @@
 export class EntityId {
-    constructor(private readonly value?: string) {
+    private readonly value: string;
+    public readonly isNew: boolean
+    constructor(value?: string) {
         if (value === undefined) {
+            this.isNew = true;
             this.value = this.generate();
+        }
+        else {
+            this.isNew = false;
+            this.value = value;
         }
         if (!this.isValid(this.value)) {
             throw new Error('Invalid EntityId');
@@ -9,7 +16,7 @@ export class EntityId {
 
     }
     protected generate(): string {
-        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        return crypto.randomUUID();
     }
 
     protected isValid(value: string): boolean {
