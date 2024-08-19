@@ -1,10 +1,7 @@
-export class Title {
-    constructor(private readonly value: string) {
-        if (!this.isValid(value)) {
-            throw new Error('Invalid Title');
-        }
+import { ValueObject, ValueObjectProps } from "src/libs/value-object.abstract";
+
+export class Title extends ValueObject<string> {
+    protected validate(props: ValueObjectProps<string>): boolean {
+        return props.value.length > 0;
     }
-    protected isValid(value: string): boolean {
-        return value.length > 0;
-    }
-}[]
+}
