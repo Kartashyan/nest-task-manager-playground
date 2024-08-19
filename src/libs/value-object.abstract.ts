@@ -25,5 +25,6 @@ export abstract class ValueObject<T> {
         }
         return this.props === valueObject.props;
     }
-    protected abstract validate(props: ValueObjectProps<T>): boolean;
+
+    protected abstract validate(props: ValueObjectProps<T>): void;
 }
