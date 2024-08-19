@@ -4,7 +4,7 @@ type SingleValue<T extends Primitive | Date> = {
     value: T;
 };
 
-type ValueObjectProps<T> = T extends Primitive | Date ? SingleValue<T> : T;
+export type ValueObjectProps<T> = T extends Primitive | Date ? SingleValue<T> : T;
 
 
 export abstract class ValueObject<T> {
