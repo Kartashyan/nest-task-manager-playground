@@ -1,5 +1,5 @@
 export class EntityId {
-    private readonly value: string;
+    readonly value: string;
     public readonly isNew: boolean
     constructor(value?: string) {
         if (value === undefined) {
