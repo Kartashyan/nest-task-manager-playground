@@ -5,7 +5,7 @@ import { EntityId } from "src/libs/entity-id.vo";
 import { Title } from "src/task/domain/title.vo";
 import { CommandHandler } from "@nestjs/cqrs";
 import { Inject } from "@nestjs/common";
-import { TASK_REPOSITORY_ADAPTER } from "./di-map";
+import { TASK_REPOSITORY_ADAPTER } from "../di-map";
 
 @CommandHandler(CreateTaskCommand)
 export class CreateTaskHandler {
