@@ -1,34 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { TaskService } from './task.service';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateTaskCommand } from './application/command/create-task.command';
 
 @Controller('task')
 export class TaskController {
-  constructor(private readonly taskService: TaskService) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+  ) {}
 
   @Post()
   create(@Body() createTaskDto: CreateTaskDto) {
-    return this.taskService.create(createTaskDto);
+    this.commandBus.execute(new CreateTaskCommand(createTaskDto.name, createTaskDto.description));
   }
 
   @Get()
   findAll() {
-    return this.taskService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.taskService.findOne(+id);
+
   }
 
-  @Patch(':id')
+  @Patch(':id/complete-task')
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.taskService.update(+id, updateTaskDto);
-  }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taskService.remove(+id);
   }
 }
