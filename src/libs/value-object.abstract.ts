@@ -11,9 +11,9 @@ export abstract class ValueObject<T> {
     protected readonly props: ValueObjectProps<T>;
 
     constructor(props: ValueObjectProps<T>) {
-        Object.freeze(this);
         this.validate(props);
         this.props = props;
+        Object.freeze(this);
     }
 
     equals(valueObject: ValueObject<T>): boolean {
