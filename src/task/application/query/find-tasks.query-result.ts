@@ -1,6 +1,6 @@
 import { IQueryResult } from '@nestjs/cqrs';
 
-export class FindTasksResult implements IQueryResult {
+export class FindTasksQueryResult implements IQueryResult {
   constructor(
     readonly tasks: Readonly<{
       id: string;
