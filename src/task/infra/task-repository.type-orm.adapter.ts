@@ -12,9 +12,7 @@ export class TaskRepositoryTypeOrmAdapter implements TaskRepositoryPort {
     constructor(
         @InjectRepository(TaskOrmEntity)
         private readonly dataSource: Repository<TaskOrmEntity>
-    ) {
-        console.log("TaskRepositoryTypeOrmAdapter created");
-    }
+    ) {}
     private toOrmEntity(task: Task): TaskOrmEntity {
         return {
             id: task.getId().value,
@@ -36,11 +34,6 @@ export class TaskRepositoryTypeOrmAdapter implements TaskRepositoryPort {
     async save(task: Task): Promise<void> {
         const taskOrmEntity = this.toOrmEntity(task);
         await this.dataSource.save(taskOrmEntity);
-    }
-
-    async findAll(): Promise<Task[]> {
-        const tasks = await this.dataSource.find();
-        return tasks.map((task) => this.toDomainEntity(task));
     }
 
     async findById(id: string): Promise<Task | null> {
