@@ -1,13 +1,15 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateTaskCommand } from '../application/command/create-task.command';
+import { FindTasksQuery } from '../application/query/find-tasks.query';
 
 @Controller('tasks')
 export class TaskController {
   constructor(
     private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
   ) {}
 
   @Post()
@@ -17,7 +19,12 @@ export class TaskController {
   }
 
   @Get()
-  findAll() {
+  async findAll() {
+    const tasksQuery = new FindTasksQuery({
+      skip: 0,
+      take: 10,
+    });
+    return await this.queryBus.execute(tasksQuery);
   }
 
   @Get(':id')
