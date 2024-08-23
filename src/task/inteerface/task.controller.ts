@@ -4,6 +4,7 @@ import { UpdateTaskDto } from '../dto/update-task.dto';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateTaskCommand } from '../application/command/create-task.command';
 import { FindTasksQuery } from '../application/query/find-tasks.query';
+import { FindTaskssRequestQueryString } from './dto/find-tasks-request-query-string';
 
 @Controller('tasks')
 export class TaskController {
@@ -19,11 +20,8 @@ export class TaskController {
   }
 
   @Get()
-  async findAll() {
-    const tasksQuery = new FindTasksQuery({
-      skip: 0,
-      take: 10,
-    });
+  async find(query: FindTaskssRequestQueryString) {
+    const tasksQuery = new FindTasksQuery(query);
     return await this.queryBus.execute(tasksQuery);
   }
 
