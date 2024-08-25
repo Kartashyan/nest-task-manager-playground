@@ -1,10 +1,13 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { TaskController } from './task.controller';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateTaskDto } from '../dto/create-task.dto';
-import { FindTasksRequestQueryString } from './dto/find-tasks-request-query-string';
+import { Test, TestingModule } from '@nestjs/testing';
 import { CreateTaskCommand } from '../application/command/create-task.command';
+import { UpdateTaskCommand } from '../application/command/update-task.command';
+import { FindTaskByIdQuery } from '../application/query/find-task-by-id.query';
 import { FindTasksQuery } from '../application/query/find-tasks.query';
+import { CreateTaskDto } from '../dto/create-task.dto';
+import { UpdateTaskDto } from '../dto/update-task.dto';
+import { FindTasksRequestQueryString } from './dto/find-tasks-request-query-string';
+import { TaskController } from './task.controller';
 
 describe('TaskController', () => {
   let controller: TaskController;
@@ -91,6 +94,32 @@ describe('TaskController', () => {
       const result = await controller.find(query);
 
       expect(result).toEqual(expectedResult);
+    });
+  });
+  describe('findOne', () => {
+    it('should call QueryBus with the correct FindTaskByIdQuery', async () => {
+      const taskId = '1';
+      const expectedTask = { id: taskId, name: 'Test Task', description: 'Test Description' };
+
+      jest.spyOn(queryBus, 'execute').mockResolvedValue(expectedTask);
+
+      const result = await controller.findOne(taskId);
+
+      expect(queryBus.execute).toHaveBeenCalledWith(new FindTaskByIdQuery(taskId));
+      expect(result).toEqual(expectedTask);
+    });
+  });
+
+  describe('update', () => {
+    it('should call CommandBus with the correct CompleteTaskCommand', async () => {
+      const taskId = '1';
+      const updateTaskDto: UpdateTaskDto = {
+        description: "Test Description",
+      };
+
+      await controller.update(taskId, updateTaskDto);
+
+      expect(commandBus.execute).toHaveBeenCalledWith(new UpdateTaskCommand(taskId, updateTaskDto));
     });
   });
 });
