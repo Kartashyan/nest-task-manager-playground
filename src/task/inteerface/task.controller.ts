@@ -26,12 +26,16 @@ export class TaskController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     
   }
 
   @Patch(':id/complete-task')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+  async completete(@Param('id') id: string) {
+
+  }
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
 
   }
 }
