@@ -26,12 +26,15 @@ const infrastructure: Provider[] = [
 ];
 
 @Module({
-  imports: [TypeOrmModule.forRoot({
-    type: 'sqlite',
-    database: 'tasks.db',
-    entities: [TaskOrmEntity],
-    synchronize: true,
-  }), TypeOrmModule.forFeature([TaskOrmEntity]), CqrsModule],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'tasks.db',
+      entities: [TaskOrmEntity],
+      synchronize: true,
+    }),
+    TypeOrmModule.forFeature([TaskOrmEntity]),
+  ],
   controllers: [TaskController],
   providers: [...application, ...infrastructure],
 })
