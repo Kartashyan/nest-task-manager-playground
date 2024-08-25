@@ -1,49 +1,96 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TaskController } from './task.controller';
-import { CreateTaskHandler } from '../application/command/create-task.handler';
-import { FindTasksHandler } from '../application/query/find-tasks.query-handler';
-import { Provider } from '@nestjs/common';
-import { TASK_QUERY_ADAPTER, TASK_REPOSITORY_ADAPTER } from '../application/di-map';
-import { TaskQueryAdapter } from '../infra/task-query.type-orm.adapter';
-import { TaskRepositoryTypeOrmAdapter } from '../infra/task-repository.type-orm.adapter';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TaskOrmEntity } from '../infra/orm/task.orm-entity';
-import { CqrsModule } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { CreateTaskDto } from '../dto/create-task.dto';
+import { FindTasksRequestQueryString } from './dto/find-tasks-request-query-string';
+import { CreateTaskCommand } from '../application/command/create-task.command';
+import { FindTasksQuery } from '../application/query/find-tasks.query';
 
 describe('TaskController', () => {
   let controller: TaskController;
+  let commandBus: CommandBus;
+  let queryBus: QueryBus;
 
   beforeEach(async () => {
-    const commandHandlers: Provider[] = [CreateTaskHandler];
-    const queryHandlers: Provider[] = [FindTasksHandler];
-
-    const application: Provider[] = [...commandHandlers, ...queryHandlers];
-
-    const infrastructure: Provider[] = [
-      {
-        provide: TASK_QUERY_ADAPTER,
-        useClass: TaskQueryAdapter
-      },
-      {
-        provide: TASK_REPOSITORY_ADAPTER,
-        useClass: TaskRepositoryTypeOrmAdapter,
-      }
-    ];
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forRoot({
-        type: 'sqlite',
-        database: 'tasks.db',
-        entities: [TaskOrmEntity],
-        synchronize: true,
-      }), TypeOrmModule.forFeature([TaskOrmEntity]), CqrsModule],
       controllers: [TaskController],
-      providers: [...application, ...infrastructure],
+      providers: [
+        {
+          provide: CommandBus,
+          useValue: {
+            execute: jest.fn(),
+          },
+        },
+        {
+          provide: QueryBus,
+          useValue: {
+            execute: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     controller = module.get<TaskController>(TaskController);
+    commandBus = module.get<CommandBus>(CommandBus);
+    queryBus = module.get<QueryBus>(QueryBus);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  describe('create', () => {
+    it('should execute CreateTaskCommand with the correct parameters', async () => {
+      const createTaskDto: CreateTaskDto = {
+        name: 'Test Task',
+        description: 'Test Description',
+      };
+
+      await controller.create(createTaskDto);
+
+      expect(commandBus.execute).toHaveBeenCalledWith(
+        new CreateTaskCommand(createTaskDto.name, createTaskDto.description),
+      );
+    });
+
+    it('should return a success message after creating a task', async () => {
+      const createTaskDto: CreateTaskDto = {
+        name: 'Test Task',
+        description: 'Test Description',
+      };
+
+      const result = await controller.create(createTaskDto);
+
+      expect(result).toEqual({ message: 'Task created' });
+    });
+  });
+
+  describe('find', () => {
+    it('should execute FindTasksQuery with the correct parameters', async () => {
+      const query: FindTasksRequestQueryString = {
+        skip: 0,
+        take: 10,
+      };
+
+      await controller.find(query);
+
+      expect(queryBus.execute).toHaveBeenCalledWith(
+        new FindTasksQuery(query),
+      );
+    });
+
+    it('should return the result of the query bus execution', async () => {
+      const query: FindTasksRequestQueryString = {
+        skip: 0,
+        take: 10,
+      };
+
+      const expectedResult = [{ id: 1, name: 'Test Task', description: 'Test Description' }];
+      (queryBus.execute as jest.Mock).mockResolvedValue(expectedResult);
+
+      const result = await controller.find(query);
+
+      expect(result).toEqual(expectedResult);
+    });
   });
 });

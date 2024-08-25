@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { CreateTaskDto } from '../dto/create-task.dto';
-import { UpdateTaskDto } from '../dto/update-task.dto';
-import { CommandBus, IQueryResult, QueryBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateTaskCommand } from '../application/command/create-task.command';
 import { FindTasksQuery } from '../application/query/find-tasks.query';
+import { CreateTaskDto } from '../dto/create-task.dto';
+import { UpdateTaskDto } from '../dto/update-task.dto';
 import { FindTasksRequestQueryString } from './dto/find-tasks-request-query-string';
 
 @Controller('tasks')
@@ -20,7 +20,7 @@ export class TaskController {
   }
 
   @Get()
-  async findTasks(@Query() query: FindTasksRequestQueryString) {
+  async find(@Query() query: FindTasksRequestQueryString) {
     const tasksQuery = new FindTasksQuery(query);
     return await this.queryBus.execute(tasksQuery);
   }
