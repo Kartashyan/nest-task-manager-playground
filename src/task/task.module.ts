@@ -8,8 +8,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TaskOrmEntity } from './infra/orm/task.orm-entity';
 import { TaskQueryAdapter } from './infra/task-query.type-orm.adapter';
 import { FindTasksHandler } from './application/query/find-tasks.query-handler';
+import { CompleteTaskHandler } from './application/command/complete-task.handler';
 
-const commandHandlers: Provider[] = [CreateTaskHandler];
+const commandHandlers: Provider[] = [CreateTaskHandler, CompleteTaskHandler];
 const queryHandlers: Provider[] = [FindTasksHandler];
 
 const application: Provider[] = [...commandHandlers, ...queryHandlers];
