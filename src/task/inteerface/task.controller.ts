@@ -35,11 +35,13 @@ export class TaskController {
 
   @Patch(':id/complete-task')
   async completete(@Param('id') id: string) {
-    this.commandBus.execute(new CompleteTaskCommand(id));
+    await this.commandBus.execute(new CompleteTaskCommand(id));
+    return { message: 'Task completed' };
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    this.commandBus.execute(new UpdateTaskCommand(id, updateTaskDto));
+    await this.commandBus.execute(new UpdateTaskCommand(id, updateTaskDto));
+    return { message: 'Task updated' };
   }
 }
