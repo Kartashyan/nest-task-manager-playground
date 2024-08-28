@@ -9,6 +9,7 @@ import { TaskQueryAdapter } from './infra/task-query.type-orm.adapter';
 import { FindTasksHandler } from './application/query/find-tasks.query-handler';
 import { CompleteTaskHandler } from './application/command/complete-task.handler';
 import { FindTaskByIdQueryHandler } from './application/query/find-task-by-id.query-handler';
+import { TaskQueryPort } from './application/query/task.query.port';
 
 const commandHandlers: Provider[] = [CreateTaskHandler, CompleteTaskHandler];
 const queryHandlers: Provider[] = [FindTasksHandler, FindTaskByIdQueryHandler];
@@ -17,7 +18,7 @@ const application: Provider[] = [...commandHandlers, ...queryHandlers];
 
 const infrastructure: Provider[] = [
   {
-    provide: TASK_QUERY_ADAPTER,
+    provide: TaskQueryPort,
     useClass: TaskQueryAdapter
   },
   {

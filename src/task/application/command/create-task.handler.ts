@@ -6,11 +6,12 @@ import { Title } from "src/task/domain/title.vo";
 import { CommandHandler } from "@nestjs/cqrs";
 import { Inject } from "@nestjs/common";
 import { TASK_REPOSITORY_ADAPTER } from "../di-map";
+import { TaskQueryPort } from "../query/task.query.port";
 
 @CommandHandler(CreateTaskCommand)
 export class CreateTaskHandler {
     constructor(
-        @Inject(TASK_REPOSITORY_ADAPTER)
+        @Inject(TaskQueryPort)
         private readonly taskRepository: TaskRepositoryPort
     ) { }
     async execute(command: CreateTaskCommand): Promise<void> {
