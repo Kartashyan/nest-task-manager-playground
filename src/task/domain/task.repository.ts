@@ -1,6 +1,6 @@
 import { Task } from "./task.entity";
 
-export interface TaskRepositoryPort {
-    save(task: Task): Promise<void>;
-    findById(id: string): Promise<Task | null>;
+export abstract class TaskRepositoryPort {
+    abstract save(task: Task): Promise<void>;
+    abstract findById(id: string): Promise<Task | null>;
 }
