@@ -1,13 +1,12 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { CompleteTaskCommand } from "./complete-task.command";
-import { TaskRepositoryPort } from "src/task/domain/task.repository";
-import { TASK_REPOSITORY_ADAPTER } from "../di-map";
 import { Inject, NotFoundException } from "@nestjs/common";
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { TaskRepositoryPort } from "src/task/domain/task.repository";
+import { CompleteTaskCommand } from "./complete-task.command";
 
 @CommandHandler(CompleteTaskCommand)
 export class CompleteTaskHandler implements ICommandHandler<CompleteTaskCommand, void> {
     constructor(
-        @Inject(TASK_REPOSITORY_ADAPTER)
+        @Inject(TaskRepositoryPort)
         private readonly taskRepository: TaskRepositoryPort
     ) { }
     async execute(command: CompleteTaskCommand): Promise<void> {
