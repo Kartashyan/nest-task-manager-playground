@@ -1,6 +1,5 @@
 import { Module, Provider } from '@nestjs/common';
-import { CqrsModule } from '@nestjs/cqrs';
-import { TaskController } from './inteerface/task.controller';
+import { TaskController } from './interface/task.controller';
 import { TASK_QUERY_ADAPTER, TASK_REPOSITORY_ADAPTER } from './application/di-map';
 import { TaskRepositoryTypeOrmAdapter } from './infra/task-repository.type-orm.adapter';
 import { CreateTaskHandler } from './application/command/create-task.handler';
@@ -9,9 +8,10 @@ import { TaskOrmEntity } from './infra/orm/task.orm-entity';
 import { TaskQueryAdapter } from './infra/task-query.type-orm.adapter';
 import { FindTasksHandler } from './application/query/find-tasks.query-handler';
 import { CompleteTaskHandler } from './application/command/complete-task.handler';
+import { FindTaskByIdQueryHandler } from './application/query/find-task-by-id.query-handler';
 
 const commandHandlers: Provider[] = [CreateTaskHandler, CompleteTaskHandler];
-const queryHandlers: Provider[] = [FindTasksHandler];
+const queryHandlers: Provider[] = [FindTasksHandler, FindTaskByIdQueryHandler];
 
 const application: Provider[] = [...commandHandlers, ...queryHandlers];
 

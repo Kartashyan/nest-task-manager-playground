@@ -7,6 +7,7 @@ import { FindTasksQuery } from "../application/query/find-tasks.query";
 import { FindTasksQueryResult } from "../application/query/find-tasks.query-result";
 import { FindTaskByIdResult } from "../application/query/find-task.query-result";
 import { Injectable } from "@nestjs/common";
+import { FindTaskByIdQuery } from "../application/query/find-task-by-id.query";
 
 @Injectable()
 export class TaskQueryAdapter implements TaskQueryPort {
@@ -19,7 +20,7 @@ export class TaskQueryAdapter implements TaskQueryPort {
         return { tasks: await this.dataSource.find(query) };
     }
 
-    async findById(id: string): Promise<FindTaskByIdResult | null> {
-        return this.dataSource.findOneBy({ id }) ?? null;
+    async findById(query: FindTaskByIdQuery): Promise<FindTaskByIdResult | null> {
+        return this.dataSource.findOneBy(query) ?? null;
     }
 }
