@@ -8,7 +8,7 @@ import { TASK_QUERY_ADAPTER } from "../di-map";
 @QueryHandler(FindTaskByIdQuery)
 export class FindTaskByIdQueryHandler implements IQueryHandler<FindTaskByIdQuery> {
   constructor(
-    @Inject(TASK_QUERY_ADAPTER)
+    @Inject(TaskQueryPort)
     private readonly taskQueryPort: TaskQueryPort
 ) {}
 
