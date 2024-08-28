@@ -1,12 +1,11 @@
-import { TaskRepositoryPort } from "src/task/domain/task.repository";
-import { CreateTaskCommand } from "./create-task.command";
-import { Task } from "src/task/domain/task.entity";
-import { EntityId } from "src/libs/entity-id.vo";
-import { Title } from "src/task/domain/title.vo";
-import { CommandHandler } from "@nestjs/cqrs";
 import { Inject } from "@nestjs/common";
-import { TASK_REPOSITORY_ADAPTER } from "../di-map";
+import { CommandHandler } from "@nestjs/cqrs";
+import { EntityId } from "src/libs/entity-id.vo";
+import { Task } from "src/task/domain/task.entity";
+import { TaskRepositoryPort } from "src/task/domain/task.repository";
+import { Title } from "src/task/domain/title.vo";
 import { TaskQueryPort } from "../query/task.query.port";
+import { CreateTaskCommand } from "./create-task.command";
 
 @CommandHandler(CreateTaskCommand)
 export class CreateTaskHandler {
