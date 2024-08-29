@@ -1,6 +1,5 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { TaskQueryPort } from "../application/query/task.query.port";
-import { Task, TaskProps } from "../domain/task.entity";
 import { TaskOrmEntity } from "./orm/task.orm-entity";
 import { Repository } from "typeorm";
 import { FindTasksQuery } from "../application/query/find-tasks.query";
