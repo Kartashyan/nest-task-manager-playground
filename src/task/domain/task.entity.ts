@@ -1,5 +1,6 @@
 import { EntityId } from "src/libs/entity-id.vo";
 import { Title } from "./title.vo";
+import { AggregateRoot } from "@nestjs/cqrs";
 
 export type TaskProps = {
     id: EntityId;
@@ -8,13 +9,14 @@ export type TaskProps = {
     isCompleted: boolean;
 };
 
-export class Task {
+export class Task extends AggregateRoot {
     private readonly id: EntityId;
     private title: Title;
     private description: string;
     private isCompleted: boolean;
 
     constructor(props: TaskProps) {
+        super();
         this.id = props.id;
         this.title = props.title;
         this.description = props.description;
@@ -23,6 +25,7 @@ export class Task {
 
     completeTask() {
         this.isCompleted = true;
+        this.apply({ type: 'TaskCompleted', payload: { taskId: this.id.value } });
     }
     getId() {
         return this.id;
